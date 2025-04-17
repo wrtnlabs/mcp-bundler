@@ -1,0 +1,52 @@
+{
+  "name": "pnpm-workspace-yaml",
+  "type": "module",
+  "version": "0.3.1",
+  "description": "Utilities for managing pnpm-workspace.yaml",
+  "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+  "contributors": [
+    {
+      "name": "三咲智子 Kevin Deng",
+      "email": "sxzz@sxzz.moe"
+    }
+  ],
+  "license": "MIT",
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://github.com/sponsors/antfu"
+    },
+    {
+      "type": "individual",
+      "url": "https://github.com/sponsors/sxzz"
+    }
+  ],
+  "homepage": "https://github.com/antfu/eslint-plugin-pnpm#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antfu/eslint-plugin-pnpm.git",
+    "directory": "packages/pnpm-workspace-yaml"
+  },
+  "bugs": "https://github.com/antfu/eslint-plugin-pnpm/issues",
+  "keywords": [
+    "pnpm"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": "./dist/index.mjs"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "yaml": "^2.7.0"
+  },
+  "scripts": {
+    "build": "unbuild",
+    "stub": "unbuild --stub",
+    "start": "tsx src/index.ts"
+  }
+}
