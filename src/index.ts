@@ -25,31 +25,35 @@ interface Props<T extends string> {
 
 export async function bundler<T extends string>(props: Props<T>): Promise<{
   run: () => void;
-  server: Server;
+  createServer: (envList: Record<string, string>) => Promise<Server>;
 }> {
-  const adapter = new Client({
-    name: props.name,
-    version: props.version,
-  });
-  await connectMcp({
-    adapter,
-    mcpServers: props.mcpServers,
-  });
-
-  const server = createServer({
-    name: props.name,
-    version: props.version,
-    adapter,
-  });
   return {
     run: () => {
       buildCli({
         name: props.name,
         version: props.version,
-        adapter,
+        mcpServers: props.mcpServers,
+        env: props.env,
       }).parse(process.argv);
     },
-    server,
+    createServer: async (envList: Record<string, string>) => {
+      const adapter = new Client({
+        name: props.name,
+        version: props.version,
+      });
+      await connectMcp({
+        adapter,
+        mcpServers: props.mcpServers,
+        envMapper: props.env,
+        env: envList,
+      });
+
+      return createServer({
+        name: props.name,
+        version: props.version,
+        adapter,
+      });
+    },
   };
 }
 
@@ -61,10 +65,14 @@ export async function bundler<T extends string>(props: Props<T>): Promise<{
 export async function connectMcp(props: {
   adapter: Client;
   mcpServers: Record<string, McpConnection>;
+  envMapper: Record<string, string>;
+  env: Record<string, string>;
 }) {
   const transports = await Promise.all(Object.entries(props.mcpServers).map(async ([name, setting]) => {
     // InMemory
     if (setting instanceof Server) {
+      const env = extractEnvFromName(name, props.env, props.envMapper);
+      Object.assign(process.env, env);
       const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
       await setting.connect(serverTransport);
       return clientTransport;
@@ -77,7 +85,10 @@ export async function connectMcp(props: {
 
     // Stdio
     if ("command" in setting) {
-      return new StdioClientTransport(setting);
+      return new StdioClientTransport({
+        ...setting,
+        env: extractEnvFromName(name, props.env, props.envMapper),
+      });
     }
 
     setting satisfies never;
@@ -87,4 +98,18 @@ export async function connectMcp(props: {
   for (const transport of transports) {
     await props.adapter.connect(transport);
   }
+}
+
+/**
+ * Extracts the environment variables from the name.
+ *
+ * @param name - The name of the MCP server.
+ * @param env - The environment variables. { ENV_KEY: "ENV_TARGET" }
+ * ENV_TARGET is the target environment variable name, so example: "slack", "notion", "github", etc.
+ * @param envMapper - The environment variable mapper. { ENV_KEY: "ENV_VALUE" }
+ * ENV_VALUE is the value of the environment variable, so example: "gh_12309wqje123", "nt_12309wqje123", etc.
+ * @returns The environment variables.
+ */
+const extractEnvFromName = (name: string, env: Record<string, string>, envMapper: Record<string, string>) => {
+  return Object.fromEntries(Object.entries(env).filter(([, value]) => value === name).map(([key]) => [key, envMapper[key]]));
 }
