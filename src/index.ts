@@ -16,14 +16,14 @@ export type StdioMcpConnection = StdioServerParameters;
 export type InMemoryMcpConnection = Server;
 export type McpConnection = SSEMcpConnection | StdioMcpConnection | InMemoryMcpConnection;
 
-interface Props<T extends keyof unknown> {
+interface Props<T extends string> {
   name: string;
   version: string;
   mcpServers: Record<T, McpConnection>;
   env: Record<string, T>;
 }
 
-export async function bundler<T extends keyof unknown>(props: Props<T>): Promise<{
+export async function bundler<T extends string>(props: Props<T>): Promise<{
   run: () => void;
   server: Server;
 }> {
