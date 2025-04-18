@@ -58,6 +58,19 @@ export async function bundler<T extends string>(props: Props<T>): Promise<{
 }
 
 /**
+ * Extracts the environment variables from the name.
+ *
+ * @param name - The name of the MCP server.
+ * @param env - The environment variables. { ENV_KEY: "ENV_TARGET" }
+ * ENV_TARGET is the target environment variable name, so example: "slack", "notion", "github", etc.
+ * @param envMapper - The environment variable mapper. { ENV_KEY: "ENV_VALUE" }
+ * ENV_VALUE is the value of the environment variable, so example: "gh_12309wqje123", "nt_12309wqje123", etc.
+ * @returns The environment variables.
+ */
+function extractEnvFromName(name: string, env: Record<string, string>, envMapper: Record<string, string>) {
+  return Object.fromEntries(Object.entries(env).filter(([, value]) => value === name).map(([key]) => [key, envMapper[key]]));
+}
+/**
  * Connects to the MCP servers and returns the client transport.
  *
  * @throws Error if the MCP server configuration is invalid.
@@ -98,18 +111,4 @@ export async function connectMcp(props: {
   for (const transport of transports) {
     await props.adapter.connect(transport);
   }
-}
-
-/**
- * Extracts the environment variables from the name.
- *
- * @param name - The name of the MCP server.
- * @param env - The environment variables. { ENV_KEY: "ENV_TARGET" }
- * ENV_TARGET is the target environment variable name, so example: "slack", "notion", "github", etc.
- * @param envMapper - The environment variable mapper. { ENV_KEY: "ENV_VALUE" }
- * ENV_VALUE is the value of the environment variable, so example: "gh_12309wqje123", "nt_12309wqje123", etc.
- * @returns The environment variables.
- */
-const extractEnvFromName = (name: string, env: Record<string, string>, envMapper: Record<string, string>) => {
-  return Object.fromEntries(Object.entries(env).filter(([, value]) => value === name).map(([key]) => [key, envMapper[key]]));
 }

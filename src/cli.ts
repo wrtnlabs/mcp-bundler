@@ -1,11 +1,13 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { program } from "commander";
 
 import { createServer } from "./server";
 import { startSSEServer } from "./sse";
-import { connectMcp, McpConnection } from ".";
+
+import type { McpConnection } from ".";
+
+import { connectMcp } from ".";
 
 export function buildCli<T extends string>(props: { version: string; name: string; mcpServers: Record<T, McpConnection>; env: Record<string, T> }) {
   return program
