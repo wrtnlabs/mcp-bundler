@@ -18,19 +18,19 @@
     "mcp-bundler",
     "mcp-bundler"
   ],
-  "main": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
   "files": [
     "LICENSE",
     "README.md",
     "dist",
     "package.json"
   ],
-  "publishConfig": {
-    "import": "dist/index.mjs",
-    "require": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "access": "public"
-  },
   "scripts": {
     "build": "tsup",
     "lint": "eslint .",
