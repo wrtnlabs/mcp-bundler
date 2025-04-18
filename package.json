@@ -27,6 +27,8 @@
   "scripts": {
     "test": "vitest",
     "build": "tsup",
+    "lint": "eslint .",
+    "format": "eslint --fix .",
     "prepack": "pnpm build",
     "publint": "publint",
     "release": "pnpm lint && pnpm prepack && publint && pnpm dlx bumpp"
