@@ -1,7 +1,7 @@
 {
   "name": "@wrtnlabs/mcp-bundler",
   "type": "commonjs",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "packageManager": "pnpm@10.6.4",
   "description": "Bundles MCP servers and clients into a single executable",
   "license": "MIT",
