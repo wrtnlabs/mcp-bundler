@@ -23,10 +23,10 @@ interface Props<T extends string> {
   env: Record<string, T>;
 }
 
-export async function bundler<T extends string>(props: Props<T>): Promise<{
+export function bundler<T extends string>(props: Props<T>): {
   run: () => void;
   createServer: (envList: Record<string, string>) => Promise<Server>;
-}> {
+} {
   return {
     run: () => {
       buildCli({
