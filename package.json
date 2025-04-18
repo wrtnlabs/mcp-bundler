@@ -1,6 +1,6 @@
 {
   "name": "@wrtnlabs/mcp-bundler",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "packageManager": "pnpm@10.6.4",
   "description": "Bundles MCP servers and clients into a single executable",
   "license": "MIT",
