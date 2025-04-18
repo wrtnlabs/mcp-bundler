@@ -4,6 +4,13 @@
   "packageManager": "pnpm@10.6.4",
   "description": "Bundles MCP servers and clients into a single executable",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wrtnlabs/mcp-bundler.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wrtnlabs/mcp-bundler/issues"
+  },
   "keywords": [
     "mcp",
     "bundler",
@@ -19,7 +26,10 @@
   },
   "scripts": {
     "test": "vitest",
-    "build": "tsup"
+    "build": "tsup",
+    "prepack": "pnpm build",
+    "publint": "publint",
+    "release": "pnpm lint && pnpm prepack && publint && pnpm dlx bumpp"
   },
   "dependencies": {
     "commander": "^13.1.0"
@@ -28,9 +38,11 @@
     "@modelcontextprotocol/sdk": "^1.10.1",
     "@types/node": "^22.14.1",
     "@wrtnlabs/eslint-config": "^0.4.3",
+    "bumpp": "^10.1.0",
     "eslint": "^9.24.0",
     "eslint-plugin-format": "^1.0.1",
     "jiti": "^2.4.2",
+    "publint": "^0.3.12",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3",
     "vitest": "^3.1.1"
