@@ -72,5 +72,9 @@ export async function connectMcp(props: {
  * @returns The environment variables.
  */
 function extractEnvFromName(name: string, env: Record<string, string>, envMapper: Record<string, string>) {
-  return Object.fromEntries(Object.entries(env).filter(([, value]) => value === name).map(([key]) => [key, envMapper[key]]));
+  return Object.fromEntries(
+    Object.entries(env)
+      .filter(([, value]) => value === name)
+      .map(([key]) => [key, envMapper[key]]),
+  );
 }

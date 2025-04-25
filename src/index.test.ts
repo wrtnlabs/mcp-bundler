@@ -17,7 +17,7 @@ describe("bundler", () => {
         version: "1.0.0",
         mcpServers: {
           test: {
-            command: "/Users/sunrabbit/.local/share/mise/installs/node/22.14.0/bin/npx",
+            command: "npx",
             args: ["-y", "@wrtnlabs/calculator-mcp"],
             env: {
               PATH: process.env.PATH!,
