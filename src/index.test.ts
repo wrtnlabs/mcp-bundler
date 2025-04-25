@@ -1,7 +1,7 @@
-import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
-
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { bundler } from "./index";
@@ -10,23 +10,31 @@ describe("bundler", () => {
   describe("createServer", () => {
     let server: Server | undefined;
     let client: Client;
+    let mockServer: Server;
 
     beforeAll(async () => {
+      mockServer = new Server({
+        name: "test-server",
+        version: "1.0.0",
+      }, {
+        capabilities: {
+          tools: {},
+        },
+      });
+
+      mockServer.setRequestHandler(ListToolsRequestSchema, async () => {
+        return {
+          tools: [],
+        };
+      });
+
       const b = bundler({
         name: "test-bundler",
         version: "1.0.0",
         mcpServers: {
-          test: {
-            command: "npx",
-            args: ["-y", "@wrtnlabs/calculator-mcp"],
-            env: {
-              PATH: process.env.PATH!,
-            },
-          },
+          test: mockServer,
         },
-        env: {
-          PATH: "test",
-        },
+        env: {},
       });
 
       client = new Client({
@@ -44,6 +52,7 @@ describe("bundler", () => {
 
     afterAll(async () => {
       await server?.close();
+      await mockServer?.close();
     });
 
     it("should create server successfully", () => {
@@ -53,6 +62,7 @@ describe("bundler", () => {
     it("should allow client to communicate with server", async () => {
       const response = await client.listTools();
       expect(response).toBeDefined();
+      expect(response.tools).toEqual([]);
     });
 
     it("should handle multiple requests concurrently", async () => {
@@ -63,7 +73,7 @@ describe("bundler", () => {
       ]);
       expect(responses).toHaveLength(3);
       responses.forEach((response) => {
-        expect(response).toBeDefined();
+        expect(response.tools).toEqual([]);
       });
     });
   });

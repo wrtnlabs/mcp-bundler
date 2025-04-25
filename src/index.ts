@@ -8,14 +8,14 @@ import { buildCli } from "./cli";
 import { connectMcp } from "./mcp";
 import { createServer } from "./server";
 
-interface Props<T extends string> {
+interface Props<T extends Record<string, McpConnection>> {
   name: string;
   version: string;
-  mcpServers: Record<T, McpConnection>;
-  env: Record<string, T>;
+  mcpServers: T;
+  env: Record<string, keyof T>;
 }
 
-export function bundler<T extends string>(props: Props<T>): {
+export function bundler<const T extends Record<string, McpConnection>>(props: Props<T>): {
   run: () => void;
   createServer: (envList: Record<string, string>) => Promise<Server>;
 } {
@@ -37,8 +37,8 @@ export function bundler<T extends string>(props: Props<T>): {
       await connectMcp({
         adapter,
         mcpServers: props.mcpServers,
-        envMapper: props.env,
-        env: envList,
+        envMapper: envList,
+        env: props.env,
       });
 
       return createServer({

@@ -1,6 +1,6 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { program } from "commander";
+import { Command } from "commander";
 
 import type { McpConnection } from "./mcp.js";
 
@@ -8,8 +8,8 @@ import { connectMcp } from "./mcp.js";
 import { createServer } from "./server";
 import { startSSEServer } from "./sse";
 
-export function buildCli<T extends string>(props: { version: string; name: string; mcpServers: Record<T, McpConnection>; env: Record<string, T> }) {
-  return program
+export function buildCli<T extends Record<string, McpConnection>>(props: { version: string; name: string; mcpServers: T; env: Record<string, keyof T> }) {
+  return new Command()
     .version(props.version)
     .name(props.name)
     .option("--port <port>", "Port to listen on for SSE transport.")

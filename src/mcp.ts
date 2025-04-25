@@ -18,11 +18,11 @@ export type McpConnection = SSEMcpConnection | StdioMcpConnection | InMemoryMcpC
  *
  * @throws Error if the MCP server configuration is invalid.
  */
-export async function connectMcp(props: {
+export async function connectMcp<const T extends Record<string, McpConnection>>(props: {
   adapter: Client;
-  mcpServers: Record<string, McpConnection>;
+  mcpServers: T;
   envMapper: Record<string, string>;
-  env: Record<string, string>;
+  env: Record<string, keyof T>;
 }) {
   const transports = await Promise.all(Object.entries(props.mcpServers).map(async ([name, setting]) => {
     // InMemory
@@ -71,7 +71,7 @@ export async function connectMcp(props: {
  * ENV_VALUE is the value of the environment variable, so example: "gh_12309wqje123", "nt_12309wqje123", etc.
  * @returns The environment variables.
  */
-function extractEnvFromName(name: string, env: Record<string, string>, envMapper: Record<string, string>) {
+function extractEnvFromName<const T extends Record<string, McpConnection>>(name: string, env: Record<string, keyof T>, envMapper: Record<string, string>) {
   return Object.fromEntries(
     Object.entries(env)
       .filter(([, value]) => value === name)
