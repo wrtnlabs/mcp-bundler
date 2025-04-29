@@ -1,5 +1,10 @@
 # MCP Bundler
 
+Have MCP server setups been too complicated until now?
+Was it difficult to share MCP settings with each other?
+
+This is a library that lets you bundle an MCP server setup easily.
+
 ## Usage
 
 ```typescript
@@ -9,16 +14,14 @@ import { createServer } from "@wrtnlabs/calculator-mcp";
 import { bundler } from "@wrtnlabs/mcp-bundler";
 
 export const server: Server = bundler({
+  name: "The cool Server",
+  version: "0.0.1",
   mcpServers: {
     figma: {
       command: "bun",
       args: [
         "--watch",
         "/path/to/figma-mcp/src/index.ts",
-        "-e",
-        "FIGMA_PERSONAL_ACCESS_TOKEN=your_token_here",
-        "-e",
-        "PORT=6000"
       ]
     },
     calculator: createServer({
@@ -32,6 +35,11 @@ export const server: Server = bundler({
         OPENAPI_MCP_HEADERS: "{\"Authorization\": \"Bearer ntn_****\", \"Notion-Version\": \"2022-06-28\" }"
       }
     },
+  },
+  env: {
+    OPENAPI_MCP_HEADERS: "notionApi",
+    FIGMA_PERSONAL_ACCESS_TOKEN: "figma",
+    PORT: "figma",
   }
 })();
 ```
