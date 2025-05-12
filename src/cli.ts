@@ -8,7 +8,7 @@ import { connectMcp } from "./mcp.js";
 import { createServer } from "./server";
 import { startSSEServer } from "./sse";
 
-export function buildCli<T extends Record<string, McpConnection>>(props: { version: string; name: string; mcpServers: T; env: Record<string, keyof T> }) {
+export function buildCli<T extends Record<string, McpConnection>>(props: { version: string; name: string; mcpServers: T }) {
   return new Command()
     .version(props.version)
     .name(props.name)
@@ -21,8 +21,7 @@ export function buildCli<T extends Record<string, McpConnection>>(props: { versi
       await connectMcp({
         adapter,
         mcpServers: props.mcpServers,
-        env: props.env,
-        envMapper: process.env as Record<string, string>,
+        externalEnv: process.env as Record<string, string>,
       });
 
       if (typeof options === "object" && options !== null && "port" in options && (typeof options.port === "string" || typeof options.port === "number")) {
