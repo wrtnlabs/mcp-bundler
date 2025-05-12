@@ -1,12 +1,12 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { describe, expect, it } from "vitest";
 
 import { createServer } from "./server";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
 describe("createServer", () => {
-  it("should create a server instance", () => {
+  it("should create a server instance", async () => {
     const client = new Client({
       name: "test-client",
       version: "1.0.0",
@@ -18,7 +18,7 @@ describe("createServer", () => {
       adapter: client,
     });
     expect(server).toBeDefined();
-    server.close();
+    await server.close();
   });
 
   it("should handle tool listing requests", async () => {
@@ -48,7 +48,7 @@ describe("createServer", () => {
     await server.connect(serverTransport);
     await client.connect(clientTransport);
     const tools = await client.listTools();
-    
+
     expect(tools).toBeDefined();
     await _client.close();
     await client.close();
