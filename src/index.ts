@@ -4,8 +4,8 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 
 import type { McpConnection } from "./mcp";
 
-import { buildCli } from "./cli";
 import { connectMcp } from "./mcp";
+import { buildCli } from "./cli";
 import { createServer } from "./server";
 
 interface Props<T extends Record<string, McpConnection>> {
@@ -50,3 +50,5 @@ export function bundler<const T extends Record<string, McpConnection>>(props: Pr
     },
   };
 }
+
+export { RequiredEnv, OptionalEnv } from "./mcp";

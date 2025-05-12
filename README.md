@@ -11,7 +11,7 @@ This is a library that lets you bundle an MCP server setup easily.
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
 
 import { createServer } from "@wrtnlabs/calculator-mcp";
-import { bundler } from "@wrtnlabs/mcp-bundler";
+import { bundler, RequiredEnv } from "@wrtnlabs/mcp-bundler";
 
 export const server: Server = bundler({
   name: "The cool Server",
@@ -22,7 +22,11 @@ export const server: Server = bundler({
       args: [
         "--watch",
         "/path/to/figma-mcp/src/index.ts",
-      ]
+      ],
+      env: {
+        FIGMA_PERSONAL_ACCESS_TOKEN: RequiredEnv,
+        PORT: RequiredEnv,
+      },
     },
     calculator: createServer({
       name: "calculator",
@@ -32,15 +36,10 @@ export const server: Server = bundler({
       command: "npx",
       args: ["-y", "@notionhq/notion-mcp-server"],
       env: {
-        OPENAPI_MCP_HEADERS: "{\"Authorization\": \"Bearer ntn_****\", \"Notion-Version\": \"2022-06-28\" }"
-      }
+        OPENAPI_MCP_HEADERS: RequiredEnv,
+      },
     },
   },
-  env: {
-    OPENAPI_MCP_HEADERS: "notionApi",
-    FIGMA_PERSONAL_ACCESS_TOKEN: "figma",
-    PORT: "figma",
-  }
 })();
 ```
 
