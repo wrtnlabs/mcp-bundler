@@ -34,7 +34,6 @@ describe("bundler", () => {
         mcpServers: {
           test: mockServer,
         },
-        env: {},
       });
 
       client = new Client({

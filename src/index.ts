@@ -4,15 +4,14 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 
 import type { McpConnection } from "./mcp";
 
-import { buildCli } from "./cli";
 import { connectMcp } from "./mcp";
+import { buildCli } from "./cli";
 import { createServer } from "./server";
 
 interface Props<T extends Record<string, McpConnection>> {
   name: string;
   version: string;
   mcpServers: T;
-  env: Record<string, keyof T>;
 }
 
 export function bundler<const T extends Record<string, McpConnection>>(props: Props<T>): {
@@ -25,7 +24,6 @@ export function bundler<const T extends Record<string, McpConnection>>(props: Pr
         name: props.name,
         version: props.version,
         mcpServers: props.mcpServers,
-        env: props.env,
       }).parse(process.argv);
     },
     createServer: async (envList: Record<string, string>) => {
@@ -33,12 +31,15 @@ export function bundler<const T extends Record<string, McpConnection>>(props: Pr
         name: props.name,
         version: props.version,
       });
+      const env = {
+        ...process.env,
+        ...envList,
+      } as Record<string, string>;
 
       await connectMcp({
         adapter,
         mcpServers: props.mcpServers,
-        envMapper: envList,
-        env: props.env,
+        externalEnv: env,
       });
 
       return createServer({
@@ -49,3 +50,5 @@ export function bundler<const T extends Record<string, McpConnection>>(props: Pr
     },
   };
 }
+
+export { RequiredEnv, OptionalEnv } from "./mcp";
