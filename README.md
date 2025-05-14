@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/wrtnlabs-mcp-bundler-badge.png)](https://mseep.ai/app/wrtnlabs-mcp-bundler)
+
 # MCP Bundler
 
 Have MCP server setups been too complicated until now?
